@@ -143,14 +143,6 @@ export function AddVideoForm({ QRCode: InitialQRCode }) {
   const isLoadingDiscounts = true
   const discountOptions = [NO_DISCOUNT_OPTION]
 
-  /*
-    These variables are used to display product images, and will be populated when image URLs can be retrieved from the Admin.
-  */
-  const imageSrc = selectedProduct?.images?.edges?.[0]?.node?.url
-  const originalImageSrc = selectedProduct?.images?.[0]?.originalSrc
-  const altText =
-    selectedProduct?.images?.[0]?.altText || selectedProduct?.title
-
   const handleDropZoneDrop = useCallback(
     (_dropFiles, acceptedFiles, _rejectedFiles) =>
       setFile((file) => acceptedFiles[0]),
@@ -180,17 +172,6 @@ export function AddVideoForm({ QRCode: InitialQRCode }) {
   /* The form layout, created using Polaris and App Bridge components. */
   return (
     <Stack vertical>
-      {deletedProduct && (
-        <Banner
-          title='The product for this QR code no longer exists.'
-          status='critical'
-        >
-          <p>
-            Scans will be directed to a 404 page, or you can choose another
-            product for this QR code.
-          </p>
-        </Banner>
-      )}
       <Layout>
         <Layout.Section>
           <Form>
