@@ -39,7 +39,7 @@ export default function HomePage() {
           /* This button will take the user to a Create a QR code page */
           action={{
             content: 'Add Videos',
-            onAction: () => navigate('/qrcodes/new'),
+            onAction: () => navigate('/video/addvideo'),
           }}
           image='https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png'
         >
@@ -60,7 +60,7 @@ export default function HomePage() {
         title='Videos'
         primaryAction={{
           content: 'Add Video',
-          onAction: () => navigate('/qrcodes/new'),
+          onAction: () => navigate('/video/addvideo'),
         }}
       />
       <Layout>
