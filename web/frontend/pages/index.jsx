@@ -8,16 +8,7 @@ import {
 } from '@shopify/polaris'
 
 export default function HomePage() {
-  /*
-    Add an App Bridge useNavigate hook to set up the navigate function.
-    This function modifies the top-level browser URL so that you can
-    navigate within the embedded app and keep the browser in sync on reload.
-  */
   const navigate = useNavigate()
-
-  /*
-    These are mock values. Setting these values lets you preview the loading markup and the empty state.
-  */
   const isLoading = false
   const isRefetching = false
   const QRCodes = []
@@ -50,10 +41,6 @@ export default function HomePage() {
       </Card>
     ) : null
 
-  /*
-    Use Polaris Page and TitleBar components to create the page layout,
-    and include the empty state contents set above.
-  */
   return (
     <Page>
       <TitleBar
