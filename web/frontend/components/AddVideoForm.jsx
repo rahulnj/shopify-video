@@ -33,13 +33,19 @@ import { useAuthenticatedFetch, useShopifyQuery } from '../hooks'
 /* Import custom hooks for forms */
 import { useForm, useField, notEmptyString } from '@shopify/react-form'
 
-export function AddVideoForm() {
+export const AddVideoForm = () => {
   const [file, setFile] = useState()
   const navigate = useNavigate()
   const appBridge = useAppBridge()
   const fetch = useAuthenticatedFetch()
 
-  const onSubmit = (body) => console.log('submit', body)
+  const onSubmit = (body) => {
+    console.log('submited data', body)
+    localStorage.setItem(
+      `${appBridge.hostOrigin}-product`,
+      JSON.stringify(body)
+    )
+  }
 
   const {
     fields: { title, hastags, videourl, videolink },
@@ -106,8 +112,32 @@ export function AddVideoForm() {
           </Form>
         </Layout.Section>
         <Layout.Section secondary>
-          <Card sectioned title='Add video'>
-            <VideoThumbnail thumbnailUrl={file} />
+          <Card sectioned title='Imported Video'>
+            {false ? (
+              <EmptyState imageContained={true} />
+            ) : (
+              <EmptyState>
+                <p>Video Preview will appear here after you save.</p>
+              </EmptyState>
+            )}
+            <Stack vertical>
+              <Button
+                fullWidth
+                primary
+                download
+                // url={QRCodeURL}
+                // disabled={!QRCode || isDeleting}
+              >
+                Download
+              </Button>
+              <Button
+                fullWidth
+                // onClick={goToDestination}
+                // disabled={!selectedProduct}
+              >
+                Go to destination
+              </Button>
+            </Stack>
           </Card>
         </Layout.Section>
         <Layout.Section>
@@ -125,4 +155,22 @@ export function AddVideoForm() {
       </Layout>
     </Stack>
   )
+}
+/* Builds a URL to the selected product */
+function productViewURL({ host, productHandle, discountCode }) {
+  const url = new URL(host)
+  const productPath = `/products/${productHandle}`
+  url.pathname = productPath
+  return url.toString()
+}
+
+/* Builds a URL to a checkout that contains the selected product */
+function productCheckoutURL({ host, variantId, quantity = 1, discountCode }) {
+  const url = new URL(host)
+  const id = variantId.replace(
+    /gid:\/\/shopify\/ProductVariant\/([0-9]+)/,
+    '$1'
+  )
+  url.pathname = `/cart/${id}:${quantity}`
+  return url.toString()
 }

@@ -1,4 +1,9 @@
-import { useNavigate, TitleBar, Loading } from '@shopify/app-bridge-react'
+import {
+  useNavigate,
+  TitleBar,
+  Loading,
+  useAppBridge,
+} from '@shopify/app-bridge-react'
 import {
   Card,
   EmptyState,
@@ -6,12 +11,22 @@ import {
   Page,
   SkeletonBodyText,
 } from '@shopify/polaris'
+import { useEffect, useState } from 'react'
 
 export default function HomePage() {
+  const appBridge = useAppBridge()
   const navigate = useNavigate()
+  const [products, setProducts] = useState([])
   const isLoading = false
   const isRefetching = false
-  const QRCodes = []
+
+  useEffect(() => {
+    const ProductList = JSON.parse(
+      localStorage.getItem(`${appBridge.hostOrigin}-product`)
+    )
+    setProducts([ProductList])
+  }, [])
+  console.log(products, 'products')
 
   /* loadingMarkup uses the loading component from AppBridge and components from Polaris  */
   const loadingMarkup = isLoading ? (
@@ -23,7 +38,7 @@ export default function HomePage() {
 
   /* Use Polaris Card and EmptyState components to define the contents of the empty state */
   const emptyStateMarkup =
-    !isLoading && !QRCodes?.length ? (
+    !isLoading && !products?.length ? (
       <Card sectioned>
         <EmptyState
           heading='Create unique videos for your product'
@@ -51,6 +66,11 @@ export default function HomePage() {
       <Layout>
         <Layout.Section>
           {loadingMarkup}
+          <div>
+            {products?.map((product) => (
+              <p>{product.title}</p>
+            ))}
+          </div>
           {emptyStateMarkup}
         </Layout.Section>
       </Layout>
