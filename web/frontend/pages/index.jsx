@@ -29,7 +29,7 @@ export default function HomePage() {
           heading='Create unique videos for your product'
           /* This button will take the user to a Create a QR code page */
           action={{
-            content: 'Add Videos',
+            content: 'Add Video',
             onAction: () => navigate('/video/addvideo'),
           }}
           image='https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png'

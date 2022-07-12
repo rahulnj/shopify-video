@@ -35,7 +35,6 @@ import { useForm, useField, notEmptyString } from '@shopify/react-form'
 
 export function AddVideoForm() {
   const [file, setFile] = useState()
-  const [showResourcePicker, setShowResourcePicker] = useState(false)
   const navigate = useNavigate()
   const appBridge = useAppBridge()
   const fetch = useAuthenticatedFetch()
@@ -43,7 +42,7 @@ export function AddVideoForm() {
   const onSubmit = (body) => console.log('submit', body)
 
   const {
-    fields: { title, hastags, videolink },
+    fields: { title, hastags, videourl, videolink },
     dirty,
     reset,
     submitting,
@@ -59,6 +58,10 @@ export function AddVideoForm() {
         value: '',
         validates: [notEmptyString('Please enter hashtags')],
       }),
+      videourl: useField({
+        value: '',
+        validates: [notEmptyString('Please enter a video url')],
+      }),
       videolink: useField({
         value: '',
         validates: [notEmptyString('Please enter a video link')],
@@ -66,34 +69,6 @@ export function AddVideoForm() {
     },
     onSubmit,
   })
-
-  const handleDropZoneDrop = useCallback(
-    (_dropFiles, acceptedFiles, _rejectedFiles) =>
-      setFile((file) => acceptedFiles[0]),
-    []
-  )
-  console.log('drop', file)
-
-  const validImageTypes = ['image/gif', 'image/jpeg', 'image/png']
-
-  const fileUpload = !file && <DropZone.FileUpload />
-  const uploadedFile = file && (
-    <Stack>
-      <Thumbnail
-        size='large'
-        alt={file.name}
-        source={
-          validImageTypes.includes(file.type)
-            ? window.URL.createObjectURL(file)
-            : NoteMinor
-        }
-      />
-      <div>
-        {file.name}
-        <Caption>{file.size} bytes</Caption>
-      </div>
-    </Stack>
-  )
 
   return (
     <Stack vertical>
@@ -123,22 +98,16 @@ export function AddVideoForm() {
               <Card sectioned title='Hashtags'>
                 <TextField {...hastags} label='Hashtags' />
               </Card>
-              <Card sectioned title='Video link'>
-                <TextField {...videolink} label='Video link' />
+              <Card sectioned title='Video Options'>
+                <TextField {...videourl} label='Video Url' />
+                <TextField {...videolink} label='Video Link' />
               </Card>
             </FormLayout>
           </Form>
         </Layout.Section>
         <Layout.Section secondary>
           <Card sectioned title='Add video'>
-            {file ? (
-              <VideoThumbnail thumbnailUrl={file} />
-            ) : (
-              <DropZone allowMultiple={false} onDrop={handleDropZoneDrop}>
-                {uploadedFile}
-                {fileUpload}
-              </DropZone>
-            )}
+            <VideoThumbnail thumbnailUrl={file} />
           </Card>
         </Layout.Section>
         <Layout.Section>
