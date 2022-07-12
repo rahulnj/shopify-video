@@ -16,6 +16,7 @@ import {
   EmptyState,
   DropZone,
   Caption,
+  VideoThumbnail,
 } from '@shopify/polaris'
 import {
   ContextualSaveBar,
@@ -63,7 +64,7 @@ export function AddVideoForm() {
       setFile((file) => acceptedFiles[0]),
     []
   )
-  //   console.log('drop', file)
+  console.log('drop', file)
 
   const validImageTypes = ['image/gif', 'image/jpeg', 'image/png']
 
@@ -122,10 +123,14 @@ export function AddVideoForm() {
         </Layout.Section>
         <Layout.Section secondary>
           <Card sectioned title='Add video'>
-            <DropZone allowMultiple={false} onDrop={handleDropZoneDrop}>
-              {uploadedFile}
-              {fileUpload}
-            </DropZone>
+            {file ? (
+              <VideoThumbnail thumbnailUrl={file} />
+            ) : (
+              <DropZone allowMultiple={false} onDrop={handleDropZoneDrop}>
+                {uploadedFile}
+                {fileUpload}
+              </DropZone>
+            )}
           </Card>
         </Layout.Section>
         <Layout.Section>

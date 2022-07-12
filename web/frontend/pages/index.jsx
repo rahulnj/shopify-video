@@ -26,7 +26,7 @@ export default function HomePage() {
     !isLoading && !QRCodes?.length ? (
       <Card sectioned>
         <EmptyState
-          heading='Create unique QR codes for your product'
+          heading='Create unique videos for your product'
           /* This button will take the user to a Create a QR code page */
           action={{
             content: 'Add Videos',
@@ -34,9 +34,7 @@ export default function HomePage() {
           }}
           image='https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png'
         >
-          <p>
-            Allow customers to scan codes and buy products using their phones.
-          </p>
+          <p>Allow customers to watch videos and buy products.</p>
         </EmptyState>
       </Card>
     ) : null
