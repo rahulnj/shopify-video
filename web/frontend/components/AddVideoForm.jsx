@@ -43,7 +43,7 @@ export function AddVideoForm() {
   const onSubmit = (body) => console.log('submit', body)
 
   const {
-    fields: { title },
+    fields: { title, hastags, videolink },
     dirty,
     reset,
     submitting,
@@ -54,6 +54,14 @@ export function AddVideoForm() {
       title: useField({
         value: '',
         validates: [notEmptyString('Please enter a caption')],
+      }),
+      hastags: useField({
+        value: '',
+        validates: [notEmptyString('Please enter hashtags')],
+      }),
+      videolink: useField({
+        value: '',
+        validates: [notEmptyString('Please enter a video link')],
       }),
     },
     onSubmit,
@@ -113,10 +121,10 @@ export function AddVideoForm() {
                 <TextField {...title} label='Caption' />
               </Card>
               <Card sectioned title='Hashtags'>
-                <TextField label='Hashtags' />
+                <TextField {...hastags} label='Hashtags' />
               </Card>
               <Card sectioned title='Video link'>
-                <TextField label='Video link' />
+                <TextField {...videolink} label='Video link' />
               </Card>
             </FormLayout>
           </Form>
