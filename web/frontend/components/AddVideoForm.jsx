@@ -14,9 +14,8 @@ import {
   TextStyle,
   Layout,
   EmptyState,
-  DropZone,
-  Caption,
-  VideoThumbnail,
+  ButtonGroup,
+  List,
 } from '@shopify/polaris'
 import {
   ContextualSaveBar,
@@ -45,11 +44,11 @@ export const AddVideoForm = () => {
       `${appBridge.hostOrigin}-product`,
       JSON.stringify(body)
     )
+    makeClean()
   }
 
   const {
     fields: { title, hastags, videourl, videolink },
-    dirty,
     reset,
     submitting,
     submit,
@@ -81,22 +80,6 @@ export const AddVideoForm = () => {
       <Layout>
         <Layout.Section>
           <Form>
-            <ContextualSaveBar
-              saveAction={{
-                label: 'Save',
-                onAction: submit,
-                loading: submitting,
-                disabled: submitting,
-              }}
-              discardAction={{
-                label: 'Discard',
-                onAction: reset,
-                loading: submitting,
-                disabled: submitting,
-              }}
-              visible={dirty}
-              fullWidth
-            />
             <FormLayout>
               <Card sectioned title='Caption'>
                 <TextField {...title} label='Caption' />
@@ -105,8 +88,14 @@ export const AddVideoForm = () => {
                 <TextField {...hastags} label='Hashtags' />
               </Card>
               <Card sectioned title='Video Options'>
-                <TextField {...videourl} label='Video Url' />
-                <TextField {...videolink} label='Video Link' />
+                <List sectioned>
+                  <List.Item>
+                    <TextField {...videourl} label='Video Url' />
+                  </List.Item>
+                  <List.Item>
+                    <TextField {...videolink} label='Video Link' />
+                  </List.Item>
+                </List>
               </Card>
             </FormLayout>
           </Form>
@@ -124,7 +113,6 @@ export const AddVideoForm = () => {
               <Button
                 fullWidth
                 primary
-                download
                 // url={QRCodeURL}
                 // disabled={!QRCode || isDeleting}
               >
@@ -139,6 +127,21 @@ export const AddVideoForm = () => {
               </Button>
             </Stack>
           </Card>
+        </Layout.Section>
+        <Layout.Section>
+          <ButtonGroup>
+            <Button loading={submitting} disabled={submitting} onClick={reset}>
+              Discard
+            </Button>
+            <Button
+              primary
+              loading={submitting}
+              disabled={submitting}
+              onClick={submit}
+            >
+              Save
+            </Button>
+          </ButtonGroup>
         </Layout.Section>
         <Layout.Section>
           {/* {QRCode?.id && (

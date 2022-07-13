@@ -38,7 +38,7 @@ export default function HomePage() {
 
   /* Use Polaris Card and EmptyState components to define the contents of the empty state */
   const emptyStateMarkup =
-    !isLoading && !products?.length ? (
+    !isLoading && !products?.length >= 0 ? (
       <Card sectioned>
         <EmptyState
           heading='Create unique videos for your product'
@@ -67,8 +67,8 @@ export default function HomePage() {
         <Layout.Section>
           {loadingMarkup}
           <div>
-            {products?.map((product) => (
-              <p>{product.title}</p>
+            {products?.map((product, index) => (
+              <p key={index}>{product?.title}</p>
             ))}
           </div>
           {emptyStateMarkup}
