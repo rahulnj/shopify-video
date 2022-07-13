@@ -38,13 +38,25 @@ export const AddVideoForm = () => {
   const appBridge = useAppBridge()
   const fetch = useAuthenticatedFetch()
 
-  const onSubmit = (body) => {
-    console.log('submited data', body)
+  const onSubmit = async (body) => {
+    const id = new Date().getUTCMilliseconds().toString()
+    const data = { ...body, id: id }
+    console.log('submited data', data)
+    await SaveDataToLocalStorage(data)
+    makeClean()
+  }
+
+  const SaveDataToLocalStorage = async (data) => {
+    let tempArray = []
+    tempArray =
+      (await JSON.parse(
+        localStorage.getItem(`${appBridge.hostOrigin}-product`)
+      )) || []
+    tempArray.push(data)
     localStorage.setItem(
       `${appBridge.hostOrigin}-product`,
-      JSON.stringify(body)
+      JSON.stringify(tempArray)
     )
-    makeClean()
   }
 
   const {
@@ -160,7 +172,7 @@ export const AddVideoForm = () => {
   )
 }
 /* Builds a URL to the selected product */
-function productViewURL({ host, productHandle, discountCode }) {
+function productViewURL({ host, productHandle }) {
   const url = new URL(host)
   const productPath = `/products/${productHandle}`
   url.pathname = productPath
@@ -168,7 +180,7 @@ function productViewURL({ host, productHandle, discountCode }) {
 }
 
 /* Builds a URL to a checkout that contains the selected product */
-function productCheckoutURL({ host, variantId, quantity = 1, discountCode }) {
+function productCheckoutURL({ host, variantId, quantity = 1 }) {
   const url = new URL(host)
   const id = variantId.replace(
     /gid:\/\/shopify\/ProductVariant\/([0-9]+)/,

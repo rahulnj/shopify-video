@@ -38,7 +38,7 @@ export default function HomePage() {
 
   /* Use Polaris Card and EmptyState components to define the contents of the empty state */
   const emptyStateMarkup =
-    !isLoading && !products?.length >= 0 ? (
+    !isLoading && !products?.length ? (
       <Card sectioned>
         <EmptyState
           heading='Create unique videos for your product'
