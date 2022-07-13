@@ -1,6 +1,6 @@
 import { Page } from '@shopify/polaris'
 import { TitleBar } from '@shopify/app-bridge-react'
-import { AddVideoForm } from '../../components/AddVideoForm'
+import { AddVideoForm } from '../../components'
 
 export default function AddVideo() {
   const breadcrumbs = [{ content: 'Videos', url: '/' }]

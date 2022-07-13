@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom'
 import { Card, Page, Layout, SkeletonBodyText } from '@shopify/polaris'
 import { Loading, TitleBar, useAppBridge } from '@shopify/app-bridge-react'
-import { AddVideoForm } from '../../components/AddVideoForm'
+import { AddVideoForm } from '../../components'
 
 export default function addVideoEdit() {
   const { id } = useParams()
