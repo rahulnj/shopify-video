@@ -32,8 +32,9 @@ import { useAuthenticatedFetch, useShopifyQuery } from '../hooks'
 /* Import custom hooks for forms */
 import { useForm, useField, notEmptyString } from '@shopify/react-form'
 
-export const AddVideoForm = () => {
+export const AddVideoForm = ({ savedProduct }) => {
   const [file, setFile] = useState()
+  const [productList, setProductList] = useState([])
   const navigate = useNavigate()
   const appBridge = useAppBridge()
   const fetch = useAuthenticatedFetch()
@@ -42,8 +43,21 @@ export const AddVideoForm = () => {
     const id = new Date().getUTCMilliseconds().toString()
     const data = { ...body, id: id }
     console.log('submited data', data)
-    await SaveDataToLocalStorage(data)
+
+    const productList = await JSON.parse(
+      localStorage.getItem(`${appBridge.hostOrigin}-product`)
+    )
+
+    const currentId = productList.filter((product) => product.id === id)
+    console.log(currentId, 'currentId')
+
     makeClean()
+    await SaveDataToLocalStorage(data)
+    if (currentId.length === 0) {
+      navigate(`/video/${data.id}`)
+    } else {
+      //important
+    }
   }
 
   const SaveDataToLocalStorage = async (data) => {
