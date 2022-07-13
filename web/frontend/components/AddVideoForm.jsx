@@ -33,35 +33,81 @@ import { useAuthenticatedFetch, useShopifyQuery } from '../hooks'
 import { useForm, useField, notEmptyString } from '@shopify/react-form'
 
 export const AddVideoForm = ({ savedProduct }) => {
-  const [file, setFile] = useState()
-  const [productList, setProductList] = useState([])
   const navigate = useNavigate()
   const appBridge = useAppBridge()
   const fetch = useAuthenticatedFetch()
+  const [product, setProduct] = React.useState(savedProduct)
+  // console.log(product, 'product')
+  React.useEffect(() => {
+    setProduct(savedProduct)
+  }, [savedProduct])
+  // console.log(savedProduct, '====================savedProduct')
+  // const onSubmit = async (body) => {
+  //   const id = new Date().getUTCMilliseconds().toString()
+  //   const data = { ...body, id: id }
+  //   const productList = await JSON.parse(
+  //     localStorage.getItem(`${appBridge.hostOrigin}-product`)
+  //   )
+  //   const isProductAlreadyExist = productList?.filter(
+  //     (product) => product?.id === id
+  //   )
+  //   makeClean()
+  //   await SaveDataToLocalStorage(data)
+  //   if (!isProductAlreadyExist) {
+  //     navigate(`/video/${data.id}`)
+  //   } else {
+  //     //important
+  //   }
+  // }
 
-  const onSubmit = async (body) => {
-    const id = new Date().getUTCMilliseconds().toString()
-    const data = { ...body, id: id }
-    console.log('submited data', data)
+  const onSubmit = useCallback(
+    (body) => {
+      ;(async () => {
+        const id = product
+          ? product?.id
+          : new Date().getUTCMilliseconds().toString()
+        const data = { ...body, id: id }
+        // console.log(data, '===============data')
+        const productList = await JSON.parse(
+          localStorage.getItem(`${appBridge.hostOrigin}-product`)
+        )
+        const isProductAlreadyExist = productList?.filter(
+          (product) => product?.id === id
+        )
+        makeClean()
+        if (!isProductAlreadyExist) {
+          await SaveDataToLocalStorage(data)
+          navigate(`/video/${data.id}`)
+        } else {
+          let editedData = isProductAlreadyExist[0]
+          editedData = { ...editedData, ...data }
+          SaveEditedDataToLocalStorage(editedData)
+          setProduct(editedData)
+        }
+      })()
+      return { status: 'success' }
+    },
+    [product, setProduct]
+  )
 
-    const productList = await JSON.parse(
-      localStorage.getItem(`${appBridge.hostOrigin}-product`)
+  const SaveEditedDataToLocalStorage = async (data) => {
+    let tempArray = []
+    tempArray =
+      (await JSON.parse(
+        localStorage.getItem(`${appBridge.hostOrigin}-product`)
+      )) || []
+    tempArray.forEach((product) => {
+      if (product.id === data.id) {
+        tempArray.splice(tempArray.indexOf(product), 1, data)
+      } else {
+        return product
+      }
+    })
+    localStorage.setItem(
+      `${appBridge.hostOrigin}-product`,
+      JSON.stringify(tempArray)
     )
-
-    const isProductAlreadyExist = productList?.filter(
-      (product) => product?.id === id
-    )
-    console.log(isProductAlreadyExist, 'isProductAlreadyExist')
-
-    makeClean()
-    await SaveDataToLocalStorage(data)
-    if (!isProductAlreadyExist) {
-      navigate(`/video/${data.id}`)
-    } else {
-      //important
-    }
   }
-
   const SaveDataToLocalStorage = async (data) => {
     let tempArray = []
     tempArray =
@@ -81,22 +127,23 @@ export const AddVideoForm = ({ savedProduct }) => {
     submitting,
     submit,
     makeClean,
+    dirty,
   } = useForm({
     fields: {
       title: useField({
-        value: '' || savedProduct?.title,
+        value: '' || product?.title,
         validates: [notEmptyString('Please enter a caption')],
       }),
       hastags: useField({
-        value: '' || savedProduct?.hastags,
+        value: '' || product?.hastags,
         validates: [notEmptyString('Please enter hashtags')],
       }),
       videourl: useField({
-        value: '' || savedProduct?.videourl,
+        value: '' || product?.videourl,
         validates: [notEmptyString('Please enter a video url')],
       }),
       videolink: useField({
-        value: '' || savedProduct?.videolink,
+        value: '' || product?.videolink,
         validates: [notEmptyString('Please enter a video link')],
       }),
     },
@@ -108,6 +155,22 @@ export const AddVideoForm = ({ savedProduct }) => {
       <Layout>
         <Layout.Section>
           <Form>
+            <ContextualSaveBar
+              saveAction={{
+                label: 'Save',
+                onAction: submit,
+                loading: submitting,
+                disabled: submitting,
+              }}
+              discardAction={{
+                label: 'Discard',
+                onAction: reset,
+                loading: submitting,
+                disabled: submitting,
+              }}
+              visible={dirty}
+              fullWidth
+            />
             <FormLayout>
               <Card sectioned title='Caption'>
                 <TextField {...title} label='Caption' />
@@ -135,7 +198,8 @@ export const AddVideoForm = ({ savedProduct }) => {
                 style={{
                   height: '400px',
                   width: '200px',
-                  margin: '-140px auto 20px auto',
+                  // margin: '-140px auto 20px auto',
+                  margin: '0 auto 20px auto',
                 }}
               >
                 <video
@@ -144,7 +208,7 @@ export const AddVideoForm = ({ savedProduct }) => {
                   muted
                   playsInline
                   src={savedProduct?.videourl}
-                  style={{ width: '100%', height: '100%' }}
+                  style={{ width: '100%', height: '100%', margin: '0 auto' }}
                 >
                   <source
                     src={savedProduct?.videourl}
@@ -185,7 +249,7 @@ export const AddVideoForm = ({ savedProduct }) => {
             </Stack>
           </Card>
         </Layout.Section>
-        <Layout.Section>
+        {/* <Layout.Section>
           <ButtonGroup>
             <Button loading={submitting} disabled={submitting} onClick={reset}>
               Discard
@@ -193,13 +257,13 @@ export const AddVideoForm = ({ savedProduct }) => {
             <Button
               primary
               loading={submitting}
-              disabled={submitting}
+              // disabled={submitting}
               onClick={submit}
             >
               Save
             </Button>
           </ButtonGroup>
-        </Layout.Section>
+        </Layout.Section> */}
         <Layout.Section>
           {/* {QRCode?.id && (
             <Button

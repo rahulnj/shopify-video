@@ -50,11 +50,12 @@ export default function addVideoEdit() {
         localStorage.getItem(`${appBridge.hostOrigin}-product`)
       )
       const data = productList.filter((product) => product.id === id)
+      //   console.log(data, 'data-videos')
       setSavedProduct(data[0])
     }
     fetchData()
   }, [])
-  console.log(savedProduct, 'savedProduct')
+  //   console.log(savedProduct, 'savedProduct')
   return (
     <Page>
       <TitleBar
