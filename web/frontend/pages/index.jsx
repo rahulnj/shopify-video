@@ -12,6 +12,7 @@ import {
   SkeletonBodyText,
 } from '@shopify/polaris'
 import { useEffect, useState } from 'react'
+import { ProductListIndex } from '../components'
 
 export default function HomePage() {
   const appBridge = useAppBridge()
@@ -27,6 +28,10 @@ export default function HomePage() {
     setProducts(ProductList)
   }, [])
   console.log(products, 'products')
+
+  const productsMarkup = products?.length ? (
+    <ProductListIndex products={products} loading={false} />
+  ) : null
 
   /* loadingMarkup uses the loading component from AppBridge and components from Polaris  */
   const loadingMarkup = isLoading ? (
@@ -66,11 +71,7 @@ export default function HomePage() {
       <Layout>
         <Layout.Section>
           {loadingMarkup}
-          <div>
-            {products?.map((product, index) => (
-              <p key={index}>{product?.title}</p>
-            ))}
-          </div>
+          {productsMarkup}
           {emptyStateMarkup}
         </Layout.Section>
       </Layout>
