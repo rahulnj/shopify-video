@@ -48,12 +48,14 @@ export const AddVideoForm = ({ savedProduct }) => {
       localStorage.getItem(`${appBridge.hostOrigin}-product`)
     )
 
-    const currentId = productList.filter((product) => product.id === id)
-    console.log(currentId, 'currentId')
+    const isProductAlreadyExist = productList?.filter(
+      (product) => product?.id === id
+    )
+    console.log(isProductAlreadyExist, 'isProductAlreadyExist')
 
     makeClean()
     await SaveDataToLocalStorage(data)
-    if (currentId.length === 0) {
+    if (!isProductAlreadyExist) {
       navigate(`/video/${data.id}`)
     } else {
       //important
@@ -82,19 +84,19 @@ export const AddVideoForm = ({ savedProduct }) => {
   } = useForm({
     fields: {
       title: useField({
-        value: '',
+        value: '' || savedProduct?.title,
         validates: [notEmptyString('Please enter a caption')],
       }),
       hastags: useField({
-        value: '',
+        value: '' || savedProduct?.hastags,
         validates: [notEmptyString('Please enter hashtags')],
       }),
       videourl: useField({
-        value: '',
+        value: '' || savedProduct?.videourl,
         validates: [notEmptyString('Please enter a video url')],
       }),
       videolink: useField({
-        value: '',
+        value: '' || savedProduct?.videolink,
         validates: [notEmptyString('Please enter a video link')],
       }),
     },
@@ -128,9 +130,38 @@ export const AddVideoForm = ({ savedProduct }) => {
         </Layout.Section>
         <Layout.Section secondary>
           <Card sectioned title='Imported Video'>
-            {false ? (
-              <EmptyState imageContained={true} />
+            {savedProduct?.videolink ? (
+              <div
+                style={{
+                  height: '400px',
+                  width: '200px',
+                  margin: '-140px auto 20px auto',
+                }}
+              >
+                <video
+                  controls
+                  loop
+                  muted
+                  playsInline
+                  src={savedProduct?.videourl}
+                  style={{ width: '100%', height: '100%' }}
+                >
+                  <source
+                    src={savedProduct?.videourl}
+                    type='video/mp4'
+                  ></source>
+                  <source
+                    src={savedProduct?.videourl}
+                    type='video/webm'
+                  ></source>
+                  <source
+                    src={savedProduct?.videourl}
+                    type='video/mov'
+                  ></source>
+                </video>
+              </div>
             ) : (
+              // <EmptyState imageContained={true} />
               <EmptyState>
                 <p>Video Preview will appear here after you save.</p>
               </EmptyState>
