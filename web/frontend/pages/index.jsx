@@ -24,7 +24,7 @@ export default function HomePage() {
     const ProductList = JSON.parse(
       localStorage.getItem(`${appBridge.hostOrigin}-product`)
     )
-    setProducts([ProductList])
+    setProducts(ProductList)
   }, [])
   console.log(products, 'products')
 
