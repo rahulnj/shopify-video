@@ -37,37 +37,17 @@ export const AddVideoForm = ({ savedProduct }) => {
   const appBridge = useAppBridge()
   const fetch = useAuthenticatedFetch()
   const [product, setProduct] = React.useState(savedProduct)
-  // console.log(product, 'product')
   React.useEffect(() => {
     setProduct(savedProduct)
   }, [savedProduct])
-  // console.log(savedProduct, '====================savedProduct')
-  // const onSubmit = async (body) => {
-  //   const id = new Date().getUTCMilliseconds().toString()
-  //   const data = { ...body, id: id }
-  //   const productList = await JSON.parse(
-  //     localStorage.getItem(`${appBridge.hostOrigin}-product`)
-  //   )
-  //   const isProductAlreadyExist = productList?.filter(
-  //     (product) => product?.id === id
-  //   )
-  //   makeClean()
-  //   await SaveDataToLocalStorage(data)
-  //   if (!isProductAlreadyExist) {
-  //     navigate(`/video/${data.id}`)
-  //   } else {
-  //     //important
-  //   }
-  // }
 
   const onSubmit = useCallback(
     (body) => {
       ;(async () => {
-        const id = product
+        let id = product
           ? product?.id
           : new Date().getUTCMilliseconds().toString()
         const data = { ...body, id: id }
-        // console.log(data, '===============data')
         const productList = await JSON.parse(
           localStorage.getItem(`${appBridge.hostOrigin}-product`)
         )
@@ -75,13 +55,19 @@ export const AddVideoForm = ({ savedProduct }) => {
           (product) => product?.id === id
         )
         makeClean()
-        if (!isProductAlreadyExist) {
+        if (
+          isProductAlreadyExist === undefined ||
+          isProductAlreadyExist.length === 0
+        ) {
           await SaveDataToLocalStorage(data)
+          setProduct(data)
+          // id = ''
           navigate(`/video/${data.id}`)
         } else {
-          let editedData = isProductAlreadyExist[0]
+          let editedData = isProductAlreadyExist?.[0]
           editedData = { ...editedData, ...data }
-          SaveEditedDataToLocalStorage(editedData)
+          await SaveEditedDataToLocalStorage(editedData)
+          // id = ''
           setProduct(editedData)
         }
       })()
