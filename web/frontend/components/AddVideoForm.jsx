@@ -15,6 +15,8 @@ import {
   Layout,
   EmptyState,
   ButtonGroup,
+  Popover,
+  OptionList,
   List,
 } from '@shopify/polaris'
 import {
@@ -37,6 +39,16 @@ export const AddVideoForm = ({ savedProduct }) => {
   const appBridge = useAppBridge()
   const fetch = useAuthenticatedFetch()
   const [product, setProduct] = React.useState(savedProduct)
+  const [selectedCta, setSelectedCta] = useState('shop_now')
+
+  const handleSelectChange = useCallback((value) => setSelectedCta(value), [])
+
+  const options = [
+    { label: 'Shop Now', value: 'shop_now' },
+    { label: 'See More', value: 'see_more' },
+    { label: 'Contact Now', value: 'contact_now' },
+  ]
+
   React.useEffect(() => {
     setProduct(savedProduct)
   }, [savedProduct])
@@ -170,7 +182,7 @@ export const AddVideoForm = ({ savedProduct }) => {
                     <TextField {...videourl} label='Video Url' />
                   </List.Item>
                   <List.Item>
-                    <TextField {...videolink} label='Video Link' />
+                    <TextField {...videolink} label='CTA Link' />
                   </List.Item>
                 </List>
               </Card>
@@ -184,8 +196,8 @@ export const AddVideoForm = ({ savedProduct }) => {
                 style={{
                   height: '400px',
                   width: '200px',
-                  // margin: '-140px auto 20px auto',
                   margin: '0 auto 20px auto',
+                  position: 'relative',
                 }}
               >
                 <video
@@ -209,6 +221,23 @@ export const AddVideoForm = ({ savedProduct }) => {
                     type='video/mov'
                   ></source>
                 </video>
+                <div
+                  style={{
+                    // height: '275px',
+                    position: 'absolute',
+                    left: '50%',
+                    bottom: '50px',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                >
+                  <Select
+                    // label=''
+                    // labelInline
+                    options={options}
+                    onChange={handleSelectChange}
+                    value={selectedCta}
+                  />
+                </div>
               </div>
             ) : (
               // <EmptyState imageContained={true} />
@@ -217,50 +246,23 @@ export const AddVideoForm = ({ savedProduct }) => {
               </EmptyState>
             )}
             <Stack vertical>
-              <Button
+              {/* <Button
                 fullWidth
                 primary
                 // url={QRCodeURL}
                 // disabled={!QRCode || isDeleting}
               >
                 Download
-              </Button>
-              <Button
+              </Button> */}
+              {/* <Button
                 fullWidth
                 // onClick={goToDestination}
                 // disabled={!selectedProduct}
               >
                 Go to destination
-              </Button>
+              </Button> */}
             </Stack>
           </Card>
-        </Layout.Section>
-        {/* <Layout.Section>
-          <ButtonGroup>
-            <Button loading={submitting} disabled={submitting} onClick={reset}>
-              Discard
-            </Button>
-            <Button
-              primary
-              loading={submitting}
-              // disabled={submitting}
-              onClick={submit}
-            >
-              Save
-            </Button>
-          </ButtonGroup>
-        </Layout.Section> */}
-        <Layout.Section>
-          {/* {QRCode?.id && (
-            <Button
-              outline
-              destructive
-              onClick={deleteQRCode}
-              loading={isDeleting}
-            >
-              Delete QR code
-            </Button>
-          )} */}
         </Layout.Section>
       </Layout>
     </Stack>
