@@ -5,23 +5,14 @@ import {
   Form,
   FormLayout,
   TextField,
-  Button,
-  ChoiceList,
   Select,
-  Thumbnail,
-  Icon,
   Stack,
-  TextStyle,
   Layout,
   EmptyState,
-  ButtonGroup,
-  Popover,
-  OptionList,
   List,
 } from '@shopify/polaris'
 import {
   ContextualSaveBar,
-  ResourcePicker,
   useAppBridge,
   useNavigate,
 } from '@shopify/app-bridge-react'
@@ -223,7 +214,6 @@ export const AddVideoForm = ({ savedProduct }) => {
                 </video>
                 <div
                   style={{
-                    // height: '275px',
                     position: 'absolute',
                     left: '50%',
                     bottom: '50px',
@@ -231,8 +221,6 @@ export const AddVideoForm = ({ savedProduct }) => {
                   }}
                 >
                   <Select
-                    // label=''
-                    // labelInline
                     options={options}
                     onChange={handleSelectChange}
                     value={selectedCta}
@@ -245,23 +233,7 @@ export const AddVideoForm = ({ savedProduct }) => {
                 <p>Video Preview will appear here after you save.</p>
               </EmptyState>
             )}
-            <Stack vertical>
-              {/* <Button
-                fullWidth
-                primary
-                // url={QRCodeURL}
-                // disabled={!QRCode || isDeleting}
-              >
-                Download
-              </Button> */}
-              {/* <Button
-                fullWidth
-                // onClick={goToDestination}
-                // disabled={!selectedProduct}
-              >
-                Go to destination
-              </Button> */}
-            </Stack>
+            <Stack vertical></Stack>
           </Card>
         </Layout.Section>
       </Layout>
